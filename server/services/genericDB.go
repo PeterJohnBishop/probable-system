@@ -10,6 +10,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
+// GENERIC
+
 func GetTables(client *dynamodb.Client) ([]string, error) {
 
 	result, err := client.ListTables(context.TODO(), &dynamodb.ListTablesInput{})
@@ -55,16 +57,14 @@ func GetAllItems(client *dynamodb.Client, tableName string) ([]map[string]types.
 	var lastEvaluatedKey map[string]types.AttributeValue
 
 	for {
-		// Perform Scan operation
 		out, err := client.Scan(context.TODO(), &dynamodb.ScanInput{
 			TableName:         aws.String(tableName),
-			ExclusiveStartKey: lastEvaluatedKey, // Handle pagination
+			ExclusiveStartKey: lastEvaluatedKey,
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		// Unmarshal items into a Go struct
 		var batch []map[string]types.AttributeValue
 		err = attributevalue.UnmarshalListOfMaps(out.Items, &batch)
 		if err != nil {
@@ -72,7 +72,6 @@ func GetAllItems(client *dynamodb.Client, tableName string) ([]map[string]types.
 		}
 		items = append(items, batch...)
 
-		// Check if there's more data to fetch
 		if out.LastEvaluatedKey == nil {
 			break
 		}
@@ -82,7 +81,7 @@ func GetAllItems(client *dynamodb.Client, tableName string) ([]map[string]types.
 	return items, nil
 }
 
-func updateItem(client *dynamodb.Client, tableName, id, newName string) error {
+func UpdateItem(client *dynamodb.Client, tableName, id, newName string) error {
 	update := expression.Set(expression.Name("name"), expression.Value(newName))
 
 	expr, err := expression.NewBuilder().WithUpdate(update).Build()
@@ -106,3 +105,5 @@ func updateItem(client *dynamodb.Client, tableName, id, newName string) error {
 
 	return nil
 }
+
+// USER
