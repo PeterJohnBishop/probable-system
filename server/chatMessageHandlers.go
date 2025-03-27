@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"probable-system/main.go/server/services"
 	"probable-system/main.go/server/services/db"
@@ -54,11 +55,18 @@ func CreateChat(client *dynamodb.Client, w http.ResponseWriter, r *http.Request)
 
 	chatId := fmt.Sprintf("c_%s", id)
 
+	if len(chat.Users) == 0 {
+		http.Error(w, `{"error": "Users array must not be empty"}`, http.StatusInternalServerError)
+		return
+	}
+
 	newChat := map[string]types.AttributeValue{
-		"id":       &types.AttributeValueMemberS{Value: chatId},
-		"users":    &types.AttributeValueMemberSS{Value: chat.Users},
-		"messages": &types.AttributeValueMemberSS{Value: chat.Messages},
-		"active":   &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", chat.Active)},
+		"id":     &types.AttributeValueMemberS{Value: chatId},
+		"active": &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", time.Now().Unix())},
+	}
+
+	if len(chat.Messages) > 0 {
+		newChat["messages"] = &types.AttributeValueMemberSS{Value: chat.Messages}
 	}
 
 	err = db.CreateChat(client, "chats", newChat)
@@ -67,10 +75,20 @@ func CreateChat(client *dynamodb.Client, w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	message := `{"message": "Chat started}`
+	response := map[string]interface{}{
+		"message": "Chat opened!",
+		"chat_id": chatId,
+	}
 
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, `{"error": "Failed to encode response"}`, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(message))
+	w.Write(jsonResponse)
 }
 
 func CreateChatMessage(client *dynamodb.Client, w http.ResponseWriter, r *http.Request, chatId string) {
@@ -115,9 +133,15 @@ func CreateChatMessage(client *dynamodb.Client, w http.ResponseWriter, r *http.R
 	newMessage := map[string]types.AttributeValue{
 		"id":     &types.AttributeValueMemberS{Value: messageId},
 		"sender": &types.AttributeValueMemberS{Value: message.Sender},
-		"text":   &types.AttributeValueMemberS{Value: message.Text},
-		"media":  &types.AttributeValueMemberS{Value: message.Media},
-		"date":   &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", message.Date)},
+		"date":   &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", time.Now().Unix())},
+	}
+
+	if message.Text != "" {
+		newMessage["text"] = &types.AttributeValueMemberS{Value: message.Text}
+	}
+
+	if len(message.Media) > 0 {
+		newMessage["media"] = &types.AttributeValueMemberSS{Value: message.Media}
 	}
 
 	err = db.CreateMessage(client, "messages", newMessage)

@@ -8,11 +8,11 @@ type User struct {
 }
 
 type Message struct {
-	ID     string `json:"id"`
-	Sender string `json:"sender"`
-	Text   string `json:"text"`
-	Media  string `json:"media"`
-	Date   int64  `json:"date"` // func (t time.Time) UnixMilli() int64
+	ID     string   `json:"id"`
+	Sender string   `json:"sender"`
+	Text   string   `json:"text"`
+	Media  []string `json:"media"`
+	Date   int64    `json:"date"` // func (t time.Time) UnixMilli() int64
 }
 
 type Chat struct {
