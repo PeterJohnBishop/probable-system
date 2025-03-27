@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
+	"probable-system/main.go/server/services"
 	"probable-system/main.go/server/services/db"
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -17,6 +19,22 @@ func CreateChat(client *dynamodb.Client, w http.ResponseWriter, r *http.Request)
 
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
 		return
 	}
 
@@ -59,6 +77,22 @@ func CreateChatMessage(client *dynamodb.Client, w http.ResponseWriter, r *http.R
 
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
 		return
 	}
 
@@ -134,6 +168,22 @@ func GetChatById(client *dynamodb.Client, w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
+		return
+	}
+
 	resp, err := db.GetChatById(client, "chats", id)
 	if err != nil {
 		http.Error(w, `{"error": "Failed to get chat"}`, http.StatusInternalServerError)
@@ -170,6 +220,22 @@ func GetAllChats(client *dynamodb.Client, w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
+		return
+	}
+
 	resp, err := db.GetAllChats(client, "chats")
 	if err != nil {
 		http.Error(w, `{"error": "Failed to get all chats"}`, http.StatusInternalServerError)
@@ -203,6 +269,22 @@ func GetChatMessages(client *dynamodb.Client, w http.ResponseWriter, r *http.Req
 
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
 		return
 	}
 
@@ -260,6 +342,22 @@ func UpdateChat(client *dynamodb.Client, w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
+		return
+	}
+
 	var chat db.Chat
 	err := json.NewDecoder(r.Body).Decode(&chat)
 	if err != nil {
@@ -287,6 +385,22 @@ func DeleteChat(client *dynamodb.Client, w http.ResponseWriter, r *http.Request,
 		return
 	}
 
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
+		return
+	}
+
 	err := db.DeleteChat(client, "chats", id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -303,6 +417,22 @@ func DeleteChatMessage(client *dynamodb.Client, w http.ResponseWriter, r *http.R
 
 	if r.Method != http.MethodDelete {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, `{"error": "Authorization header"}`, http.StatusInternalServerError)
+		return
+	}
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+	if token == authHeader {
+		http.Error(w, `{"error": "Invalid token format"}`, http.StatusInternalServerError)
+		return
+	}
+	claims := services.ParseAccessToken(token)
+	if claims == nil {
+		http.Error(w, `{"error": "Failed to verify token"}`, http.StatusInternalServerError)
 		return
 	}
 

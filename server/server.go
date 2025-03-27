@@ -80,7 +80,7 @@ func addChatMessageRoutes(client *dynamodb.Client, mux *http.ServeMux) {
 	mux.HandleFunc("/chats/all", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
 		GetAllChats(client, w, r)
 	})))
-	mux.HandleFunc("/chats/id/{id}", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/chats/chat/{id}", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		GetChatById(client, w, r, id)
 	})))
@@ -88,14 +88,14 @@ func addChatMessageRoutes(client *dynamodb.Client, mux *http.ServeMux) {
 		id := r.PathValue("chatId")
 		GetChatMessages(client, w, r, id)
 	})))
-	mux.HandleFunc("/chats/update", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/chats/chat/update", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
 		UpdateChat(client, w, r)
 	})))
-	mux.HandleFunc("/chats/delete/{id}", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/chats/chat/{id}/delete", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")
 		DeleteChat(client, w, r, id)
 	})))
-	mux.HandleFunc("/chats/chat/{chatId}/messages/delete/{messageId}", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/chats/chat/{chatId}/messages/message/{messageId}/delete", services.LoggerMiddleware(services.VerifyJWT(func(w http.ResponseWriter, r *http.Request) {
 		chatId := r.PathValue("chatId")
 		messageId := r.PathValue("messageId")
 		DeleteChatMessage(client, w, r, chatId, messageId)
