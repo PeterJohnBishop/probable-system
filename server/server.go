@@ -8,6 +8,7 @@ import (
 	"probable-system/main.go/server/services"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 func StartServer() {
@@ -27,6 +28,14 @@ func StartServer() {
 	}
 	fmt.Printf("Connected to DynamoDB\n")
 
+	s3Client := s3.NewFromConfig(cfg)
+	_, err = s3Client.ListBuckets(context.TODO(), &s3.ListBucketsInput{})
+	if err != nil {
+		log.Fatalf("unable to load S3 buckets, %v", err)
+	}
+	fmt.Printf("Connected to S3\n")
+
+	services.InitAuth()
 	addUserRoutes(dynamoClient, mux)
 	addChatMessageRoutes(dynamoClient, mux)
 
