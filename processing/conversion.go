@@ -65,7 +65,7 @@ func GenerateTripData() {
 		return
 	}
 
-	outputFile := fmt.Sprintf(outputUrl + "trips.json")
+	outputFile := fmt.Sprintf(outputUrl + "trip_data.json")
 	err = os.WriteFile(outputFile, jsonData, 0644)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
@@ -112,7 +112,7 @@ func GenerateRouteData() {
 		fmt.Println("Error converting to JSON:", err)
 		return
 	}
-	outputFile := fmt.Sprintf(outputUrl + "routes.json")
+	outputFile := fmt.Sprintf(outputUrl + "route_data.json")
 	err = os.WriteFile(outputFile, jsonData, 0644)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
@@ -165,7 +165,7 @@ func GenerateShapesData() {
 		fmt.Println("Error converting to JSON:", err)
 		return
 	}
-	outputFile := fmt.Sprint(outputUrl + "shapes.json")
+	outputFile := fmt.Sprint(outputUrl + "shape_data.json")
 	err = os.WriteFile(outputFile, jsonData, 0644)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
@@ -205,7 +205,7 @@ func GenerateStopTimesData() {
 		fmt.Println("Error converting to JSON:", err)
 		return
 	}
-	outputFile := fmt.Sprint(outputUrl + "stop_times.json")
+	outputFile := fmt.Sprint(outputUrl + "stop_time_data.json")
 	err = os.WriteFile(outputFile, jsonData, 0644)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
@@ -243,7 +243,7 @@ func GenerateStopsData() {
 		fmt.Println("Error converting to JSON:", err)
 		return
 	}
-	outputFile := fmt.Sprint(outputUrl + "stops.json")
+	outputFile := fmt.Sprint(outputUrl + "stop_data.json")
 	err = os.WriteFile(outputFile, jsonData, 0644)
 	if err != nil {
 		fmt.Println("Error writing JSON file:", err)
