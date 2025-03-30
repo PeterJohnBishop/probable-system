@@ -31,16 +31,16 @@ type Shape struct {
 }
 
 type StopTime struct {
-	TripID            string `json:"trip_id"`
-	ArrivalTime       string `json:"arrival_time"`
-	DepartureTime     string `json:"departure_time"`
-	StopID            string `json:"stop_id"`
-	StopSequence      int    `json:"stop_sequence"`
-	StopHeadsign      string `json:"stop_headsign,omitempty"`
-	PickupType        int    `json:"pickup_type"`
-	DropOffType       int    `json:"drop_off_type"`
-	ShapeDistTraveled string `json:"shape_dist_traveled,omitempty"`
-	Timepoint         int    `json:"timepoint,omitempty"`
+	TripID            string  `json:"trip_id"`
+	ArrivalTime       string  `json:"arrival_time"`
+	DepartureTime     string  `json:"departure_time"`
+	StopID            string  `json:"stop_id"`
+	StopSequence      int     `json:"stop_sequence"`
+	StopHeadsign      string  `json:"stop_headsign"`
+	PickupType        int     `json:"pickup_type"`
+	DropOffType       int     `json:"drop_off_type"`
+	ShapeDistTraveled float64 `json:"shape_dist_traveled"`
+	Timepoint         int     `json:"timepoint"`
 }
 
 type Stop struct {
@@ -50,10 +50,10 @@ type Stop struct {
 	StopDesc           string  `json:"stop_desc"`
 	StopLat            float64 `json:"stop_lat"`
 	StopLon            float64 `json:"stop_lon"`
-	ZoneID             string  `json:"zone_id,omitempty"`
-	StopURL            string  `json:"stop_url,omitempty"`
-	LocationType       int     `json:"location_type,omitempty"`
-	ParentStation      string  `json:"parent_station,omitempty"`
-	StopTimezone       string  `json:"stop_timezone,omitempty"`
-	WheelchairBoarding int     `json:"wheelchair_boarding,omitempty"`
+	ZoneID             string  `json:"zone_id"`
+	StopURL            string  `json:"stop_url"`
+	LocationType       int     `json:"location_type"`
+	ParentStation      string  `json:"parent_station"`
+	StopTimezone       string  `json:"stop_timezone"`
+	WheelchairBoarding int     `json:"wheelchair_boarding"`
 }

@@ -2,7 +2,6 @@ package processing
 
 import (
 	"encoding/csv"
-	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -59,20 +58,23 @@ func GenerateTripData() {
 		})
 	}
 
-	jsonData, err := json.MarshalIndent(trips, "", "  ")
+	outputFile := fmt.Sprintf(outputUrl + "trips.go")
+	file, err := os.Create(outputFile)
 	if err != nil {
-		fmt.Println("Error converting to JSON:", err)
+		fmt.Println("Error creating Go file:", err)
 		return
 	}
+	defer file.Close()
 
-	outputFile := fmt.Sprintf(outputUrl + "trip_data.json")
-	err = os.WriteFile(outputFile, jsonData, 0644)
-	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		return
+	fmt.Fprintln(file, "package output")
+	fmt.Fprintln(file, "import \"probable-system/main.go/processing\"")
+	fmt.Fprintln(file, "var Trips = []processing.Trip{")
+	for _, trip := range trips {
+		fmt.Fprintf(file, "\t{RouteID: \"%s\", ServiceID: \"%s\", TripID: \"%s\", TripHeadsign: \"%s\", DirectionID: %d, BlockID: \"%s\", ShapeID: \"%s\"},\n",
+			trip.RouteID, trip.ServiceID, trip.TripID, trip.TripHeadsign, trip.DirectionID, trip.BlockID, trip.ShapeID)
 	}
-
-	fmt.Println("JSON data successfully saved to", outputFile)
+	fmt.Fprintln(file, "}")
+	fmt.Println("Go file successfully saved to", outputFile)
 }
 
 func GenerateRouteData() {
@@ -107,18 +109,23 @@ func GenerateRouteData() {
 
 	}
 
-	jsonData, err := json.MarshalIndent(routes, "", "  ")
+	outputFile := fmt.Sprintf(outputUrl + "routes.go")
+	file, err := os.Create(outputFile)
 	if err != nil {
-		fmt.Println("Error converting to JSON:", err)
+		fmt.Println("Error creating Go file:", err)
 		return
 	}
-	outputFile := fmt.Sprintf(outputUrl + "route_data.json")
-	err = os.WriteFile(outputFile, jsonData, 0644)
-	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		return
+	defer file.Close()
+
+	fmt.Fprintln(file, "package output")
+	fmt.Fprintln(file, "import \"probable-system/main.go/processing\"")
+	fmt.Fprintln(file, "var Routes = []processing.Route{")
+	for _, route := range routes {
+		fmt.Fprintf(file, "\t{RouteID: \"%s\", AgencyID: \"%s\", RouteShortName: \"%s\", RouteLongName: \"%s\", RouteDesc: \"%s\", RouteType: %d, RouteURL: \"%s\", RouteColor: \"%s\", RouteTextColor: \"%s\"},\n",
+			route.RouteID, route.AgencyID, route.RouteShortName, route.RouteLongName, route.RouteDesc, route.RouteType, route.RouteURL, route.RouteColor, route.RouteTextColor)
 	}
-	fmt.Println("JSON data successfully saved to", outputFile)
+	fmt.Fprintln(file, "}")
+	fmt.Println("Go file successfully saved to", outputFile)
 }
 
 func GenerateShapesData() {
@@ -160,18 +167,23 @@ func GenerateShapesData() {
 
 	}
 
-	jsonData, err := json.MarshalIndent(shapes, "", "  ")
+	outputFile := fmt.Sprintf(outputUrl + "shapes.go")
+	file, err := os.Create(outputFile)
 	if err != nil {
-		fmt.Println("Error converting to JSON:", err)
+		fmt.Println("Error creating Go file:", err)
 		return
 	}
-	outputFile := fmt.Sprint(outputUrl + "shape_data.json")
-	err = os.WriteFile(outputFile, jsonData, 0644)
-	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		return
+	defer file.Close()
+
+	fmt.Fprintln(file, "package output")
+	fmt.Fprintln(file, "import \"probable-system/main.go/processing\"")
+	fmt.Fprintln(file, "var Trips = []processing.Shape{")
+	for _, shape := range shapes {
+		fmt.Fprintf(file, "\t{ShapeID: \"%s\", ShapePtLat: %f, ShapePtLon: %f, ShapePtSequence: %d, ShapeDistTraveled: %f},\n",
+			shape.ShapeID, shape.ShapePtLat, shape.ShapePtLon, shape.ShapePtSequence, shape.ShapeDistTraveled)
 	}
-	fmt.Println("JSON data successfully saved to", outputFile)
+	fmt.Fprintln(file, "}")
+	fmt.Println("Go file successfully saved to", outputFile)
 }
 
 func GenerateStopTimesData() {
@@ -200,18 +212,23 @@ func GenerateStopTimesData() {
 		})
 	}
 
-	jsonData, err := json.MarshalIndent(stopTimes, "", "  ")
+	outputFile := fmt.Sprintf(outputUrl + "stop_times.go")
+	file, err := os.Create(outputFile)
 	if err != nil {
-		fmt.Println("Error converting to JSON:", err)
+		fmt.Println("Error creating Go file:", err)
 		return
 	}
-	outputFile := fmt.Sprint(outputUrl + "stop_time_data.json")
-	err = os.WriteFile(outputFile, jsonData, 0644)
-	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		return
+	defer file.Close()
+
+	fmt.Fprintln(file, "package output")
+	fmt.Fprintln(file, "import \"probable-system/main.go/processing\"")
+	fmt.Fprintln(file, "var StopTime = []processing.StopTime{")
+	for _, stopTime := range stopTimes {
+		fmt.Fprintf(file, "\t{TripID: \"%s\", ArrivalTime: \"%s\", DepartureTime: \"%s\", StopID: \"%s\", StopSequence: %d, PickupType: %d, DropOffType: %d},\n",
+			stopTime.TripID, stopTime.ArrivalTime, stopTime.DepartureTime, stopTime.StopID, stopTime.StopSequence, stopTime.PickupType, stopTime.DropOffType)
 	}
-	fmt.Println("StopTimes JSON successfully saved to", outputFile)
+	fmt.Fprintln(file, "}")
+	fmt.Println("Go file successfully saved to", outputFile)
 }
 
 func GenerateStopsData() {
@@ -238,16 +255,21 @@ func GenerateStopsData() {
 		})
 	}
 
-	jsonData, err := json.MarshalIndent(stops, "", "  ")
+	outputFile := fmt.Sprintf(outputUrl + "stops.go")
+	file, err := os.Create(outputFile)
 	if err != nil {
-		fmt.Println("Error converting to JSON:", err)
+		fmt.Println("Error creating Go file:", err)
 		return
 	}
-	outputFile := fmt.Sprint(outputUrl + "stop_data.json")
-	err = os.WriteFile(outputFile, jsonData, 0644)
-	if err != nil {
-		fmt.Println("Error writing JSON file:", err)
-		return
+	defer file.Close()
+
+	fmt.Fprintln(file, "package output")
+	fmt.Fprintln(file, "import \"probable-system/main.go/processing\"")
+	fmt.Fprintln(file, "var StopTime = []processing.StopTime{")
+	for _, stop := range stops {
+		fmt.Fprintf(file, "\t{StopID: \"%s\", StopCode: \"%s\", StopName: \"%s\", StopDesc: \"%s\", StopLat: %f, StopLon: %f},\n",
+			stop.StopID, stop.StopCode, stop.StopName, stop.StopDesc, stop.StopLat, stop.StopLon)
 	}
-	fmt.Println("Stops JSON successfully saved to", outputFile)
+	fmt.Fprintln(file, "}")
+	fmt.Println("Go file successfully saved to", outputFile)
 }
