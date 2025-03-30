@@ -177,7 +177,7 @@ func GenerateShapesData() {
 
 	fmt.Fprintln(file, "package output")
 	fmt.Fprintln(file, "import \"probable-system/main.go/processing\"")
-	fmt.Fprintln(file, "var Trips = []processing.Shape{")
+	fmt.Fprintln(file, "var Shapes = []processing.Shape{")
 	for _, shape := range shapes {
 		fmt.Fprintf(file, "\t{ShapeID: \"%s\", ShapePtLat: %f, ShapePtLon: %f, ShapePtSequence: %d, ShapeDistTraveled: %f},\n",
 			shape.ShapeID, shape.ShapePtLat, shape.ShapePtLon, shape.ShapePtSequence, shape.ShapeDistTraveled)
@@ -265,7 +265,7 @@ func GenerateStopsData() {
 
 	fmt.Fprintln(file, "package output")
 	fmt.Fprintln(file, "import \"probable-system/main.go/processing\"")
-	fmt.Fprintln(file, "var StopTime = []processing.StopTime{")
+	fmt.Fprintln(file, "var Stop = []processing.Stop{")
 	for _, stop := range stops {
 		fmt.Fprintf(file, "\t{StopID: \"%s\", StopCode: \"%s\", StopName: \"%s\", StopDesc: \"%s\", StopLat: %f, StopLon: %f},\n",
 			stop.StopID, stop.StopCode, stop.StopName, stop.StopDesc, stop.StopLat, stop.StopLon)
