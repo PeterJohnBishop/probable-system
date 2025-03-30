@@ -15,7 +15,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.34 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.7.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.18.15 // indirect
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.78.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.78.2
 )
 
 require (
