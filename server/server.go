@@ -38,6 +38,7 @@ func StartServer() {
 	services.InitAuth()
 	addUserRoutes(dynamoClient, mux)
 	addChatMessageRoutes(dynamoClient, mux)
+	addFileUploadRoutes(s3Client, mux)
 
 	fmt.Println("Server started on port 8080")
 	err = http.ListenAndServe(":8080", mux)
@@ -109,4 +110,10 @@ func addChatMessageRoutes(client *dynamodb.Client, mux *http.ServeMux) {
 		messageId := r.PathValue("messageId")
 		DeleteChatMessage(client, w, r, chatId, messageId)
 	})))
+}
+
+func addFileUploadRoutes(client *s3.Client, mux *http.ServeMux) {
+	mux.HandleFunc("/upload", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		HandleFileUpload(client, w, r)
+	}))
 }
