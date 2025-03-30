@@ -12,8 +12,8 @@ import (
 )
 
 const rtdAlerts = "https://www.rtd-denver.com/files/gtfs-rt/Alerts.pb"
-const rtdTripUpdates = "https://www.rtd-denver.com/files/gtfs-rt/TripUpdates.pb"
-const rtdVehiclePosition = "https://www.rtd-denver.com/files/gtfs-rt/VehiclePositions.pb"
+const rtdTripUpdates = "https://www.rtd-denver.com/files/gtfs-rt/TripUpdate.pb"
+const rtdVehiclePosition = "https://www.rtd-denver.com/files/gtfs-rt/VehiclePosition.pb"
 
 func FetchAlerts() (*gtfs.FeedMessage, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -51,7 +51,7 @@ func FetchTripUpdates() (*gtfs.FeedMessage, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rtdAlerts, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rtdTripUpdates, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
@@ -83,7 +83,7 @@ func FetchVehiclePosition() (*gtfs.FeedMessage, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rtdAlerts, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rtdVehiclePosition, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}

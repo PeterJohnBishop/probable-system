@@ -8,10 +8,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.63
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.42.0
 	github.com/joho/godotenv v1.5.1
+	google.golang.org/protobuf v1.26.0
 )
 
 require (
-	github.com/MobilityData/gtfs-realtime-bindings/golang/gtfs v1.0.0 // indirect
+	github.com/MobilityData/gtfs-realtime-bindings/golang/gtfs v1.0.0
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.10 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.34 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.7.0 // indirect

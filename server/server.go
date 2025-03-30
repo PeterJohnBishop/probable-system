@@ -40,6 +40,7 @@ func StartServer() {
 	addUserRoutes(dynamoClient, mux)
 	addChatMessageRoutes(dynamoClient, mux)
 	addFileIORoutes(s3Client, mux)
+	addGTFSRoutes(mux)
 
 	fmt.Println("Server started on port 8080")
 	err = http.ListenAndServe(":8080", mux)
@@ -119,5 +120,17 @@ func addFileIORoutes(client *s3.Client, mux *http.ServeMux) {
 	}))
 	mux.HandleFunc("/download", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		handlers.HandleFileDownload(client, w, r)
+	}))
+}
+
+func addGTFSRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("/gtfs/alerts", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.HandleGTFSRT(w, r)
+	}))
+	mux.HandleFunc("/gtfs/tripupdates", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.HandleGTFSRT(w, r)
+	}))
+	mux.HandleFunc("/gtfs/vehiclepositions", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.HandleGTFSRT(w, r)
 	}))
 }
