@@ -6,9 +6,11 @@ JWT authenticated endpoints provide access to AWS Dynamodb and S3 backend storag
 
 Additional endpoints to access GTFS-RT data feeds for alerts, trip updates, and vehicle position data.
 
-Data sets for routes, route shapes, stops, stop times, and trips are imported via CSV.
+Data sets for routes, route shapes, stops, stop times, and trips are conditionally imported.
 
 Data is imported from the files through processing functions that output Go files of public slices of data as struct literals for each data type.
+
+To improve data reading, each data set is pre-mapped on start.
 
 # notes
 

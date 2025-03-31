@@ -30,12 +30,17 @@ func OpenFile(fileName string) ([][]string, error) {
 	return records, nil
 }
 
-func GenerateTripData() {
+func GenerateTripData() bool {
+
+	if _, err := os.Stat(outputUrl + "stop_times.go"); err == nil {
+		fmt.Println("Trip File already exists, skipping generation.")
+		return true
+	}
 
 	records, err := OpenFile("trips.txt")
 	if err != nil {
 		fmt.Println("Error opening file:", err)
-		return
+		return false
 	}
 	var trips []Trip
 	for i, row := range records {
@@ -62,7 +67,7 @@ func GenerateTripData() {
 	file, err := os.Create(outputFile)
 	if err != nil {
 		fmt.Println("Error creating Go file:", err)
-		return
+		return false
 	}
 	defer file.Close()
 
@@ -75,13 +80,20 @@ func GenerateTripData() {
 	}
 	fmt.Fprintln(file, "}")
 	fmt.Println("Go file successfully saved to", outputFile)
+	return true
 }
 
-func GenerateRouteData() {
+func GenerateRouteData() bool {
+
+	if _, err := os.Stat(outputUrl + "stop_times.go"); err == nil {
+		fmt.Println("Route File already exists, skipping generation.")
+		return true
+	}
+
 	records, err := OpenFile("routes.txt")
 	if err != nil {
 		fmt.Println("Error opening file:", err)
-		return
+		return false
 	}
 
 	var routes []Route
@@ -113,7 +125,7 @@ func GenerateRouteData() {
 	file, err := os.Create(outputFile)
 	if err != nil {
 		fmt.Println("Error creating Go file:", err)
-		return
+		return false
 	}
 	defer file.Close()
 
@@ -126,13 +138,20 @@ func GenerateRouteData() {
 	}
 	fmt.Fprintln(file, "}")
 	fmt.Println("Go file successfully saved to", outputFile)
+	return true
 }
 
-func GenerateShapesData() {
+func GenerateShapesData() bool {
+
+	if _, err := os.Stat(outputUrl + "stop_times.go"); err == nil {
+		fmt.Println("Shape File already exists, skipping generation.")
+		return true
+	}
+
 	records, err := OpenFile("shapes.txt")
 	if err != nil {
 		fmt.Println("Error opening file:", err)
-		return
+		return false
 	}
 
 	var shapes []Shape
@@ -171,7 +190,7 @@ func GenerateShapesData() {
 	file, err := os.Create(outputFile)
 	if err != nil {
 		fmt.Println("Error creating Go file:", err)
-		return
+		return false
 	}
 	defer file.Close()
 
@@ -184,13 +203,20 @@ func GenerateShapesData() {
 	}
 	fmt.Fprintln(file, "}")
 	fmt.Println("Go file successfully saved to", outputFile)
+	return true
 }
 
-func GenerateStopTimesData() {
+func GenerateStopTimesData() bool {
+
+	if _, err := os.Stat(outputUrl + "stop_times.go"); err == nil {
+		fmt.Println("StopTime File already exists, skipping generation.")
+		return true
+	}
+
 	records, err := OpenFile("stop_times.txt")
 	if err != nil {
 		fmt.Println("Error opening file:", err)
-		return
+		return false
 	}
 
 	var stopTimes []StopTime
@@ -216,7 +242,7 @@ func GenerateStopTimesData() {
 	file, err := os.Create(outputFile)
 	if err != nil {
 		fmt.Println("Error creating Go file:", err)
-		return
+		return false
 	}
 	defer file.Close()
 
@@ -229,13 +255,20 @@ func GenerateStopTimesData() {
 	}
 	fmt.Fprintln(file, "}")
 	fmt.Println("Go file successfully saved to", outputFile)
+	return true
 }
 
-func GenerateStopsData() {
+func GenerateStopsData() bool {
+
+	if _, err := os.Stat(outputUrl + "stop_times.go"); err == nil {
+		fmt.Println("Stop File already exists, skipping generation.")
+		return true
+	}
+
 	records, err := OpenFile("stops.txt")
 	if err != nil {
 		fmt.Println("Error opening file:", err)
-		return
+		return false
 	}
 
 	var stops []Stop
@@ -259,7 +292,7 @@ func GenerateStopsData() {
 	file, err := os.Create(outputFile)
 	if err != nil {
 		fmt.Println("Error creating Go file:", err)
-		return
+		return false
 	}
 	defer file.Close()
 
@@ -272,4 +305,5 @@ func GenerateStopsData() {
 	}
 	fmt.Fprintln(file, "}")
 	fmt.Println("Go file successfully saved to", outputFile)
+	return true
 }

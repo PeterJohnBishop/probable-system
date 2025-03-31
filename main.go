@@ -1,7 +1,9 @@
 package main
 
 import (
-	// "probable-system/main.go/processing"
+	"fmt"
+	"probable-system/main.go/processing"
+	"sync"
 
 	"probable-system/main.go/server"
 	"probable-system/main.go/server/handlers"
@@ -9,20 +11,63 @@ import (
 
 func main() {
 
-	// Uncomment the following lines to generate data files, be sure to add output directory to gitignore
+	var wg sync.WaitGroup
+	wg.Add(5)
 
-	// processing.GenerateTripData()
-	// processing.GenerateRouteData()
-	// processing.GenerateShapesData()
-	// processing.GenerateStopTimesData()
-	// processing.GenerateStopsData()
+	go func() {
+		fmt.Println("Starting GenerateTripData...")
+		haveData := processing.GenerateTripData()
+		if haveData {
+			fmt.Println("Initializing Trip Map...")
+			handlers.InitTripsMap()
+		}
+		fmt.Println("Finished GenerateTripData")
+		wg.Done()
+	}()
+	go func() {
+		fmt.Println("Starting GenerateRouteData...")
+		haveData := processing.GenerateRouteData()
+		if haveData {
+			fmt.Println("Initializing Route Map...")
+			handlers.InitRouteMap()
+		}
+		fmt.Println("Finished GenerateRouteData")
+		wg.Done()
+	}()
+	go func() {
+		fmt.Println("Starting GenerateShapesData...")
+		haveData := processing.GenerateShapesData()
+		if haveData {
+			fmt.Println("Initializing Shapes Map...")
+			handlers.InitShapesMap()
+		}
+		fmt.Println("Finished GenerateShapesData")
+		wg.Done()
+	}()
+	go func() {
+		fmt.Println("Starting GenerateStopTimesData...")
+		haveData := processing.GenerateStopTimesData()
+		if haveData {
+			fmt.Println("Initializing Stop Times Map...")
+			handlers.InitStopTimesMap()
+		}
+		fmt.Println("Finished GenerateStopTimesData")
+		wg.Done()
+	}()
+	go func() {
+		fmt.Println("Starting GenerateStopsData...")
+		haveData := processing.GenerateStopsData()
+		if haveData {
+			fmt.Println("Initializing Stops Map...")
+			handlers.InitStopsMap()
+		}
+		fmt.Println("Finished GenerateStopsData")
+		wg.Done()
+	}()
 
-	go handlers.InitRouteMap()
-	go handlers.InitShapesMap()
-	go handlers.InitStopTimesMap()
-	go handlers.InitStopsMap()
-	go handlers.InitTripsMap()
+	wg.Wait()
+	fmt.Println("All processing tasks completed.")
 
+	// Start the server
 	server.StartServer()
-
 }

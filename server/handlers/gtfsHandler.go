@@ -47,27 +47,12 @@ func InitTripsMap() {
 }
 
 func findRouteyID(routeId string) (processing.Route, bool) {
-	fmt.Println("Finding route by ID: ", routeId)
 	route, found := RoutesMap[routeId]
 	if !found {
-		fmt.Println("Route not found")
+		return processing.Route{}, false
 	} else {
-		fmt.Println("Route found: ", route)
+		return route, true
 
-	}
-	return route, found
-}
-
-func currentStatus(status int) string {
-	switch status {
-	case 0:
-		return "INCOMING_AT"
-	case 1:
-		return "STOPPED_AT"
-	case 2:
-		return "IN_TRANSIT_TO"
-	default:
-		return "UNKNOWN"
 	}
 }
 
@@ -85,30 +70,15 @@ func HandleGTFSRT(w http.ResponseWriter, r *http.Request) {
 
 			route, _ := findRouteyID(*entity.Vehicle.Trip.RouteId)
 
-			// vehicle
-			// 	trip
-			// 		trip_id
-			// 		route_id
-			// 		direction_id
-			// 		schedule_relationship. SCHEDULED if trip is running as scheduled, ADDED if trip is an added trip, or CANCELED if trip has been canceled.
-			// 	vehicle
-			// 		id
-			// 		label
-			// 		position
-			// 			latitude
-			// 			longitude
-			// 			bearing
-			// 	stop_id
-			// 	current_status. Will have either a 0, 1, or 2.
-			// 	0 = INCOMING_AT
-			// 	1 = STOPPED_AT - if vehicle is stopped at the stop_id
-			// 	2 = IN_TRANSIT_TO - if vehicle is on its way to the stop_id
-			// 	timestamp := entity.Vehicle.Trip.TripId
-
 			var responseString string
 
-			responseString += fmt.Sprintf("status: %s\n", currentStatus(int(*entity.Vehicle.CurrentStatus)))
-
+			if entity.Vehicle == nil {
+				responseString += "entity.Vehicle is nil\n"
+			} else if entity.Vehicle.CurrentStatus == nil {
+				responseString += "entity.Vehicle.CurrentStatus is nil\n"
+			} else {
+				responseString += fmt.Sprintf("CurrentStatus: %v\n", *entity.Vehicle.CurrentStatus)
+			}
 			responseString += fmt.Sprintf("RouteId: %s, Route: %s, Desc: %s, Type: %d, \n",
 				*entity.Vehicle.Trip.RouteId,
 				route.RouteLongName,
