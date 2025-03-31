@@ -1,7 +1,10 @@
 package main
 
 import (
+	// "probable-system/main.go/processing"
+
 	"probable-system/main.go/server"
+	"probable-system/main.go/server/handlers"
 )
 
 func main() {
@@ -13,6 +16,12 @@ func main() {
 	// processing.GenerateShapesData()
 	// processing.GenerateStopTimesData()
 	// processing.GenerateStopsData()
+
+	go handlers.InitRouteMap()
+	go handlers.InitShapesMap()
+	go handlers.InitStopTimesMap()
+	go handlers.InitStopsMap()
+	go handlers.InitTripsMap()
 
 	server.StartServer()
 
