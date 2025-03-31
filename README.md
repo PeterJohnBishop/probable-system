@@ -1,5 +1,17 @@
 # probable-system
 
+A Go/Http server.
+
+JWT authenticated endpoints provide access to AWS Dynamodb and S3 backend storage supporting user creation, messaging, and file upload/download.
+
+Additional endpoints to access GTFS-RT data feeds for alerts, trip updates, and vehicle position data.
+
+Data sets for routes, route shapes, stops, stop times, and trips are imported via CSV.
+
+Data is imported from the files through processing functions that output Go files of public slices of data as struct literals for each data type.
+
+# notes
+
 go get github.com/aws/aws-sdk-go-v2/service/dynamodb
 go get github.com/aws/aws-sdk-go-v2/service/s3
 go get github.com/aws/aws-sdk-go-v2/service/rekognition
