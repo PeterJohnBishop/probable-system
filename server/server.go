@@ -124,13 +124,13 @@ func addFileIORoutes(client *s3.Client, mux *http.ServeMux) {
 }
 
 func addGTFSRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/gtfs/alerts", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
-		handlers.HandleGTFSRT(w, r)
+	mux.HandleFunc("/gtfs/alert", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.HandleAlert(w, r)
 	}))
-	mux.HandleFunc("/gtfs/tripupdates", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
-		handlers.HandleGTFSRT(w, r)
+	mux.HandleFunc("/gtfs/tripupdate", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.HandleTripUpdate(w, r)
 	}))
-	mux.HandleFunc("/gtfs/vehiclepositions", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
-		handlers.HandleGTFSRT(w, r)
+	mux.HandleFunc("/gtfs/vehicleposition", services.LoggerMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		handlers.HandleVehiclePosition(w, r)
 	}))
 }
